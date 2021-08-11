@@ -47,4 +47,4 @@ yarn build:watch
 
 # LICENSE
 
-MIT
+MIT @([chengcyber](https://github.com/chengcyber))
