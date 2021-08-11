@@ -1,0 +1,55 @@
+{
+  "name": "scan-deps",
+  "version": "0.0.1",
+  "description": "util to detect undeclared deps and phantom deps",
+  "license": "MIT",
+  "author": "Cheng Liu<chengcyber@outlook.com>",
+  "sideEffects": false,
+  "main": "lib/index.js",
+  "bin": {
+    "scan-deps": "./lib/cli.js"
+  },
+  "files": [
+    "*.js",
+    "src",
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chengcyber/scan-deps"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "test": "jest -c ./__tests__/jest.config.js"
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "lib"
+  ],
+  "dependencies": {
+    "@definitelytyped/header-parser": "^0.0.85",
+    "@definitelytyped/utils": "^0.0.85",
+    "builtin-modules": "^3.2.0",
+    "colors": "^1.4.0",
+    "commander": "^8.1.0",
+    "fs-extra": "^9.1.0",
+    "glob": "^7.1.7",
+    "tslib": "~2.1.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.12",
+    "@types/glob": "^7.1.4",
+    "@types/jest": "~26.0.20",
+    "@types/node": "^14",
+    "jest": "~26.6.3",
+    "ts-jest": "~26.4.4",
+    "typescript": "4.3.5"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
+}
