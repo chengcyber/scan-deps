@@ -1,6 +1,6 @@
 {
   "name": "scan-deps",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "util to detect undeclared deps and phantom deps",
   "license": "MIT",
   "author": "Cheng Liu<chengcyber@outlook.com>",
