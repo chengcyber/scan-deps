@@ -21,6 +21,7 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc -w",
+    "prepublishOnly": "npm run build",
     "test": "jest -c ./__tests__/jest.config.js"
   },
   "eslintIgnore": [
