@@ -7,7 +7,7 @@ util to detect undeclared deps and phantom deps
 1. CLI
 
 ```
-npx scan-deps --help
+npx scan-deps
 ```
 
 ```
@@ -28,12 +28,14 @@ Options:
 2. Node API
 
 ```js
-import { ScanDeps } from "scan-deps";
+import { scanDeps } from "scan-deps";
 
 async function main() {
   const { detectedDependencies, missingDependencies, unusedDependencies } =
-    await ScanDeps({
-      cwd: process.cwd(),
+    await scanDeps({
+      // cwd: process.cwd(),
+      // directory: 'src,lib',
+      // extension: 'ts,js,tsx,jsx',
     });
 }
 ```
@@ -47,4 +49,4 @@ yarn build:watch
 
 # LICENSE
 
-MIT @([chengcyber](https://github.com/chengcyber))
+MIT @[chengcyber](https://github.com/chengcyber)

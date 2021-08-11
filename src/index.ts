@@ -1,6 +1,6 @@
 import colors from "colors/safe";
 import path from "path";
-import fs from "fs-extra";
+import fs, { promises as fsp } from "fs";
 import glob from "glob";
 import builtinPackageNames from "builtin-modules";
 import { parseHeaderOrFail, Header } from "@definitelytyped/header-parser";
@@ -108,7 +108,7 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
 
   for (const filename of filenames) {
     try {
-      const contents: string = await fs.readFile(
+      const contents: string = await fsp.readFile(
         path.resolve(cwd, filename),
         "utf8"
       );
@@ -154,7 +154,7 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
   const declaredDevDependencies: Set<string> = new Set<string>();
   const missingDependencies: string[] = [];
   const unusedDependencies: string[] = [];
-  const packageJsonContent: string = await fs.readFile(
+  const packageJsonContent: string = await fsp.readFile(
     packageJsonFilename,
     "utf8"
   );
