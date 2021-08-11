@@ -19,7 +19,7 @@
     "url": "https://github.com/chengcyber/scan-deps"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf lib && tsc",
     "build:watch": "tsc -w",
     "prepublishOnly": "npm run build",
     "test": "jest -c ./__tests__/jest.config.js"
