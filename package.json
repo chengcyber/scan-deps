@@ -24,6 +24,11 @@
     "prepublishOnly": "npm run build",
     "test": "jest -c ./__tests__/jest.config.js"
   },
+  "keywords": [
+    "scan",
+    "phantom",
+    "dependencies"
+  ],
   "eslintIgnore": [
     "node_modules",
     "lib"
