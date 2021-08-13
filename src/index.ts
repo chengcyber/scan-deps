@@ -6,6 +6,13 @@ import builtinPackageNames from "builtin-modules";
 import { parseHeaderOrFail, Header } from "@definitelytyped/header-parser";
 import { unmangleScopedPackage } from "@definitelytyped/utils";
 
+export interface DependencyNameInfoMap {
+  [packageName: string]: Array<{
+    filePath: string;
+    lineNumber: number;
+  }>
+}
+
 export interface ScanDepsConfig {
   extension?: string;
   directory?: string;
@@ -17,6 +24,7 @@ export interface ScanDepsResult {
   detectedDependencies: string[];
   missingDependencies: string[];
   unusedDependencies: string[];
+  detectedNameInfoMap: DependencyNameInfoMap;
 }
 
 const defaultScanDepsConfig: ScanDepsConfig = {
@@ -98,6 +106,7 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
   const packageRegExp: RegExp = /^((@[a-z\-0-9!_]+\/)?[a-z\-0-9!_]+)\/?/;
 
   const requireMatches: Set<string> = new Set<string>();
+  const requireNameInfoMap: DependencyNameInfoMap = {};
 
   const pattern = `{./*.{${extension}},./{${directory}}/**/*.{${extension}}}`;
   log("glob pattern is", pattern);
@@ -107,19 +116,30 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
   log("filenames", filenames);
 
   for (const filename of filenames) {
+    const filePath = path.resolve(cwd, filename);
     try {
       const contents: string = await fsp.readFile(
-        path.resolve(cwd, filename),
+        filePath,
         "utf8"
       );
       const lines: string[] = contents.split("\n");
 
-      for (const line of lines) {
+      for (const [lineIndex, line] of lines.entries()) {
         for (const requireRegExp of requireRegExps) {
           const requireRegExpResult: RegExpExecArray | null =
             requireRegExp.exec(line);
           if (requireRegExpResult) {
             requireMatches.add(requireRegExpResult[1]);
+            
+            if (requireNameInfoMap[requireRegExpResult[1]]) {
+              requireNameInfoMap[requireRegExpResult[1]].push({
+                filePath, lineNumber: lineIndex + 1
+              })
+            } else {
+              requireNameInfoMap[requireRegExpResult[1]] = [{
+                filePath, lineNumber: lineIndex + 1
+              }]
+            }
           }
         }
       }
@@ -141,10 +161,12 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
   });
 
   const detectedPackageNames: string[] = [];
+  const detectedNameInfoMap: DependencyNameInfoMap = {};
 
   packageMatches.forEach((packageName: string) => {
     if (builtinPackageNames.indexOf(packageName) < 0) {
       detectedPackageNames.push(packageName);
+      detectedNameInfoMap[packageName] = requireNameInfoMap[packageName]
     }
   });
 
@@ -287,6 +309,7 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
     detectedDependencies: detectedPackageNames,
     missingDependencies: missingDependencies,
     unusedDependencies: unusedDependencies,
+    detectedNameInfoMap
   };
   return output;
 }
