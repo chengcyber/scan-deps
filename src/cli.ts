@@ -38,6 +38,7 @@ program
           missingDependencies,
           unusedDependencies,
           detectedDependencies,
+          detectedNameInfoMap
         } = output;
 
         // detected deps
@@ -65,6 +66,9 @@ program
           );
           for (const packageName of missingDependencies) {
             console.log("  " + packageName);
+            detectedNameInfoMap[packageName].forEach(info => {
+              console.log("    " + "at " + info.filePath + ':' + info.lineNumber);              
+            })
           }
           wroteAnything = true;
         }
