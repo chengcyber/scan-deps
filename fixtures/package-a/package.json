@@ -1,0 +1,11 @@
+{
+  "name": "package-a",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "dependencies": {
+    "minimatch": "3.0.4"
+  },
+  "devDependencies": {
+    "rimraf": "2.6.2"
+  }
+}

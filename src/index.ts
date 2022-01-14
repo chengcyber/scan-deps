@@ -10,7 +10,7 @@ export interface DependencyNameInfoMap {
   [packageName: string]: Array<{
     filePath: string;
     lineNumber: number;
-  }>
+  }>;
 }
 
 export interface ScanDepsConfig {
@@ -108,7 +108,14 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
   const requireMatches: Set<string> = new Set<string>();
   const requireNameInfoMap: DependencyNameInfoMap = {};
 
-  const pattern = `{./*.{${extension}},./{${directory}}/**/*.{${extension}}}`;
+  const extensionPattern = !extension.includes(",")
+    ? extension
+    : `{${extension}}`;
+  const directoryPattern = !directory.includes(",")
+    ? directory
+    : `{${directory}}`;
+
+  const pattern = `{./*.${extensionPattern},./${directoryPattern}/**/*.${extensionPattern}}`;
   log("glob pattern is", pattern);
   const filenames = glob.sync(pattern, {
     cwd,
@@ -118,10 +125,7 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
   for (const filename of filenames) {
     const filePath = path.resolve(cwd, filename);
     try {
-      const contents: string = await fsp.readFile(
-        filePath,
-        "utf8"
-      );
+      const contents: string = await fsp.readFile(filePath, "utf8");
       const lines: string[] = contents.split("\n");
 
       for (const [lineIndex, line] of lines.entries()) {
@@ -130,15 +134,19 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
             requireRegExp.exec(line);
           if (requireRegExpResult) {
             requireMatches.add(requireRegExpResult[1]);
-            
+
             if (requireNameInfoMap[requireRegExpResult[1]]) {
               requireNameInfoMap[requireRegExpResult[1]].push({
-                filePath, lineNumber: lineIndex + 1
-              })
+                filePath,
+                lineNumber: lineIndex + 1,
+              });
             } else {
-              requireNameInfoMap[requireRegExpResult[1]] = [{
-                filePath, lineNumber: lineIndex + 1
-              }]
+              requireNameInfoMap[requireRegExpResult[1]] = [
+                {
+                  filePath,
+                  lineNumber: lineIndex + 1,
+                },
+              ];
             }
           }
         }
@@ -166,7 +174,7 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
   packageMatches.forEach((packageName: string) => {
     if (builtinPackageNames.indexOf(packageName) < 0) {
       detectedPackageNames.push(packageName);
-      detectedNameInfoMap[packageName] = requireNameInfoMap[packageName]
+      detectedNameInfoMap[packageName] = requireNameInfoMap[packageName];
     }
   });
 
@@ -309,7 +317,7 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
     detectedDependencies: detectedPackageNames,
     missingDependencies: missingDependencies,
     unusedDependencies: unusedDependencies,
-    detectedNameInfoMap
+    detectedNameInfoMap,
   };
   return output;
 }

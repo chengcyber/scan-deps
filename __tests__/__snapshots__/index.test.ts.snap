@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Node API should work with directory parameter 1`] = `
+Object {
+  "detectedDependencies": Array [
+    "brace-expansion",
+    "glob",
+    "minimatch",
+  ],
+  "detectedNameInfoMap": Object {
+    "brace-expansion": Array [
+      Object {
+        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-b/dist/index.js",
+        "lineNumber": 2,
+      },
+    ],
+    "glob": Array [
+      Object {
+        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-b/dist/index.js",
+        "lineNumber": 3,
+      },
+    ],
+    "minimatch": Array [
+      Object {
+        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-b/dist/index.js",
+        "lineNumber": 1,
+      },
+    ],
+  },
+  "missingDependencies": Array [
+    "brace-expansion",
+    "glob",
+  ],
+  "unusedDependencies": Array [],
+}
+`;
+
+exports[`Node API should work with extension parameter 1`] = `
+Object {
+  "detectedDependencies": Array [
+    "brace-expansion",
+    "glob",
+    "minimatch",
+  ],
+  "detectedNameInfoMap": Object {
+    "brace-expansion": Array [
+      Object {
+        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-c/src/index.ts",
+        "lineNumber": 2,
+      },
+    ],
+    "glob": Array [
+      Object {
+        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-c/src/index.ts",
+        "lineNumber": 3,
+      },
+    ],
+    "minimatch": Array [
+      Object {
+        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-c/src/index.ts",
+        "lineNumber": 1,
+      },
+    ],
+  },
+  "missingDependencies": Array [
+    "brace-expansion",
+    "glob",
+  ],
+  "unusedDependencies": Array [],
+}
+`;
+
+exports[`Node API should work with simple demo 1`] = `
+Object {
+  "detectedDependencies": Array [
+    "brace-expansion",
+    "glob",
+    "minimatch",
+  ],
+  "detectedNameInfoMap": Object {
+    "brace-expansion": Array [
+      Object {
+        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-a/src/index.js",
+        "lineNumber": 2,
+      },
+    ],
+    "glob": Array [
+      Object {
+        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-a/src/index.js",
+        "lineNumber": 3,
+      },
+    ],
+    "minimatch": Array [
+      Object {
+        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-a/src/index.js",
+        "lineNumber": 1,
+      },
+    ],
+  },
+  "missingDependencies": Array [
+    "brace-expansion",
+    "glob",
+  ],
+  "unusedDependencies": Array [],
+}
+`;
