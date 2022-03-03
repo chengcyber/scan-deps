@@ -6,11 +6,15 @@ import builtinPackageNames from "builtin-modules";
 import { parseHeaderOrFail, Header } from "@definitelytyped/header-parser";
 import { unmangleScopedPackage } from "@definitelytyped/utils";
 
+import { getPackageNameFromSpecifier } from "./utils";
+
+export interface LocationInfo {
+  filePath: string;
+  lineNumber: number;
+}
+
 export interface DependencyNameInfoMap {
-  [packageName: string]: Array<{
-    filePath: string;
-    lineNumber: number;
-  }>;
+  [packageName: string]: Array<LocationInfo>;
 }
 
 export interface ScanDepsConfig {
@@ -101,12 +105,8 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
     /\/\/\/\s*<\s*reference\s+types\s*=\s*["]([^"]+)["]\s*\/>/,
   ];
 
-  // Example: "my-package/lad/dee/dah" --> "my-package"
-  // Example: "@ms/my-package" --> "@ms/my-package"
-  const packageRegExp: RegExp = /^((@[a-z\-0-9!_]+\/)?[a-z\-0-9!_]+)\/?/;
-
   const requireMatches: Set<string> = new Set<string>();
-  const requireNameInfoMap: DependencyNameInfoMap = {};
+  const requireMatchToLocationInfoListMap: Record<string, LocationInfo[]> = {};
 
   const extensionPattern = !extension.includes(",")
     ? extension
@@ -135,13 +135,13 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
           if (requireRegExpResult) {
             requireMatches.add(requireRegExpResult[1]);
 
-            if (requireNameInfoMap[requireRegExpResult[1]]) {
-              requireNameInfoMap[requireRegExpResult[1]].push({
+            if (requireMatchToLocationInfoListMap[requireRegExpResult[1]]) {
+              requireMatchToLocationInfoListMap[requireRegExpResult[1]].push({
                 filePath,
                 lineNumber: lineIndex + 1,
               });
             } else {
-              requireNameInfoMap[requireRegExpResult[1]] = [
+              requireMatchToLocationInfoListMap[requireRegExpResult[1]] = [
                 {
                   filePath,
                   lineNumber: lineIndex + 1,
@@ -151,7 +151,7 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
           }
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       log(
         colors.bold(`Skipping file(${filename}) due to error: ${error.message}`)
       );
@@ -161,20 +161,31 @@ async function scanDeps(config: ScanDepsConfig): Promise<ScanDepsResult> {
   const packageMatches: Set<string> = new Set<string>();
 
   requireMatches.forEach((requireMatch: string) => {
-    const packageRegExpResult: RegExpExecArray | null =
-      packageRegExp.exec(requireMatch);
-    if (packageRegExpResult) {
-      packageMatches.add(packageRegExpResult[1]);
+    const packageName: string | null =
+      getPackageNameFromSpecifier(requireMatch);
+    if (packageName) {
+      packageMatches.add(packageName);
     }
   });
 
   const detectedPackageNames: string[] = [];
   const detectedNameInfoMap: DependencyNameInfoMap = {};
 
+  const packageNameToLocationInfoListMap: Record<string, LocationInfo[]> = {};
+  for (const specifier of Object.keys(requireMatchToLocationInfoListMap)) {
+    const packageName: string | null = getPackageNameFromSpecifier(specifier);
+    if (packageName) {
+      packageNameToLocationInfoListMap[packageName] = (
+        packageNameToLocationInfoListMap[packageName] || []
+      ).concat(requireMatchToLocationInfoListMap[specifier]);
+    }
+  }
+
   packageMatches.forEach((packageName: string) => {
     if (builtinPackageNames.indexOf(packageName) < 0) {
       detectedPackageNames.push(packageName);
-      detectedNameInfoMap[packageName] = requireNameInfoMap[packageName];
+      detectedNameInfoMap[packageName] =
+        packageNameToLocationInfoListMap[packageName];
     }
   });
 

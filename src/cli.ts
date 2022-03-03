@@ -15,8 +15,11 @@ program
   .option("--json", "output as json")
   .option("--debug", "turn on debug log")
   .option("--all", "output all dependencies includes detected dependencies")
-  .option("--directory", "directory included, default: src,lib")
-  .option("--extension", "included file extensions, default: ts,js,tsx,jsx")
+  .option("--directory <directory>", "directory included, default: src,lib")
+  .option(
+    "--extension <extension>",
+    "included file extensions, default: ts,js,tsx,jsx"
+  )
   .action(async (opts) => {
     const { json, debug, directory, extension, all } = opts;
     const config: ScanDepsConfig = {};
@@ -38,7 +41,7 @@ program
           missingDependencies,
           unusedDependencies,
           detectedDependencies,
-          detectedNameInfoMap
+          detectedNameInfoMap,
         } = output;
 
         // detected deps
@@ -66,9 +69,11 @@ program
           );
           for (const packageName of missingDependencies) {
             console.log("  " + packageName);
-            detectedNameInfoMap[packageName].forEach(info => {
-              console.log("    " + "at " + info.filePath + ':' + info.lineNumber);              
-            })
+            detectedNameInfoMap[packageName].forEach((info) => {
+              console.log(
+                "    " + "at " + info.filePath + ":" + info.lineNumber
+              );
+            });
           }
           wroteAnything = true;
         }
