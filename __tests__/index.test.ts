@@ -1,25 +1,29 @@
 import path from "path";
-import { scanDeps } from "../src/index";
+import { scanDeps, ScanDepsConfig, ScanDepsResult } from "../src/index";
+import { resolveDependencyNameInfoMap } from "./utils/infoMap";
 import { fixtureFolder } from "./utils/paths";
 
 const packageAFolder = path.resolve(fixtureFolder, "package-a");
 const packageBFolder = path.resolve(fixtureFolder, "package-b");
 const packageCFolder = path.resolve(fixtureFolder, "package-c");
+const packageDFolder = path.resolve(fixtureFolder, "package-d");
 
 describe("Node API", () => {
   it("should work with simple demo", async () => {
-    const result = await scanDeps({
-      cwd: packageAFolder,
+    const cwd: string = packageAFolder;
+    const result: ScanDepsResult = await scanDeps({
+      cwd,
     });
-    expect(result).toMatchSnapshot();
+    testScanDepsResultMatchSnapshot(result, cwd);
   });
 
   it("should work with directory parameter", async () => {
+    const cwd: string = packageBFolder;
     const result = await scanDeps({
-      cwd: packageBFolder,
+      cwd,
       directory: "dist",
     });
-    expect(result).toMatchSnapshot();
+    testScanDepsResultMatchSnapshot(result, cwd);
 
     const result2 = await scanDeps({
       cwd: packageBFolder,
@@ -29,11 +33,12 @@ describe("Node API", () => {
   });
 
   it("should work with extension parameter", async () => {
-    const result = await scanDeps({
-      cwd: packageCFolder,
+    const cwd: string = packageCFolder;
+    const result: ScanDepsResult = await scanDeps({
+      cwd,
       extension: "ts",
     });
-    expect(result).toMatchSnapshot();
+    testScanDepsResultMatchSnapshot(result, cwd);
 
     const result2 = await scanDeps({
       cwd: packageCFolder,
@@ -41,4 +46,19 @@ describe("Node API", () => {
     });
     expect(result2).toEqual(result);
   });
+
+  it("can handle dot in package name", async () => {
+    const cwd: string = packageDFolder;
+    const result: ScanDepsResult = await scanDeps({
+      cwd,
+      extension: "ts"
+    });
+    testScanDepsResultMatchSnapshot(result, cwd);
+  });
 });
+
+function testScanDepsResultMatchSnapshot(result: ScanDepsResult, cwd: string): void {
+  const { detectedNameInfoMap, ...rest } = result;
+  expect(rest).toMatchSnapshot();
+  expect(resolveDependencyNameInfoMap(detectedNameInfoMap, cwd)).toMatchSnapshot();
+}

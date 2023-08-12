@@ -1,5 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Node API can handle dot in package name 1`] = `
+Object {
+  "detectedDependencies": Array [
+    "lodash.get",
+  ],
+  "missingDependencies": Array [
+    "lodash.get",
+  ],
+  "unusedDependencies": Array [],
+}
+`;
+
+exports[`Node API can handle dot in package name 2`] = `
+Object {
+  "lodash.get": Array [
+    Object {
+      "filePath": "index.ts",
+      "lineNumber": 1,
+    },
+  ],
+}
+`;
+
 exports[`Node API should work with directory parameter 1`] = `
 Object {
   "detectedDependencies": Array [
@@ -7,31 +30,34 @@ Object {
     "glob",
     "minimatch",
   ],
-  "detectedNameInfoMap": Object {
-    "brace-expansion": Array [
-      Object {
-        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-b/dist/index.js",
-        "lineNumber": 2,
-      },
-    ],
-    "glob": Array [
-      Object {
-        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-b/dist/index.js",
-        "lineNumber": 3,
-      },
-    ],
-    "minimatch": Array [
-      Object {
-        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-b/dist/index.js",
-        "lineNumber": 1,
-      },
-    ],
-  },
   "missingDependencies": Array [
     "brace-expansion",
     "glob",
   ],
   "unusedDependencies": Array [],
+}
+`;
+
+exports[`Node API should work with directory parameter 2`] = `
+Object {
+  "brace-expansion": Array [
+    Object {
+      "filePath": "dist/index.js",
+      "lineNumber": 2,
+    },
+  ],
+  "glob": Array [
+    Object {
+      "filePath": "dist/index.js",
+      "lineNumber": 3,
+    },
+  ],
+  "minimatch": Array [
+    Object {
+      "filePath": "dist/index.js",
+      "lineNumber": 1,
+    },
+  ],
 }
 `;
 
@@ -42,31 +68,34 @@ Object {
     "glob",
     "minimatch",
   ],
-  "detectedNameInfoMap": Object {
-    "brace-expansion": Array [
-      Object {
-        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-c/src/index.ts",
-        "lineNumber": 2,
-      },
-    ],
-    "glob": Array [
-      Object {
-        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-c/src/index.ts",
-        "lineNumber": 3,
-      },
-    ],
-    "minimatch": Array [
-      Object {
-        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-c/src/index.ts",
-        "lineNumber": 1,
-      },
-    ],
-  },
   "missingDependencies": Array [
     "brace-expansion",
     "glob",
   ],
   "unusedDependencies": Array [],
+}
+`;
+
+exports[`Node API should work with extension parameter 2`] = `
+Object {
+  "brace-expansion": Array [
+    Object {
+      "filePath": "src/index.ts",
+      "lineNumber": 2,
+    },
+  ],
+  "glob": Array [
+    Object {
+      "filePath": "src/index.ts",
+      "lineNumber": 3,
+    },
+  ],
+  "minimatch": Array [
+    Object {
+      "filePath": "src/index.ts",
+      "lineNumber": 1,
+    },
+  ],
 }
 `;
 
@@ -77,30 +106,33 @@ Object {
     "glob",
     "minimatch",
   ],
-  "detectedNameInfoMap": Object {
-    "brace-expansion": Array [
-      Object {
-        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-a/src/index.js",
-        "lineNumber": 2,
-      },
-    ],
-    "glob": Array [
-      Object {
-        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-a/src/index.js",
-        "lineNumber": 3,
-      },
-    ],
-    "minimatch": Array [
-      Object {
-        "filePath": "/Users/admin/workspace/scan-deps/fixtures/package-a/src/index.js",
-        "lineNumber": 1,
-      },
-    ],
-  },
   "missingDependencies": Array [
     "brace-expansion",
     "glob",
   ],
   "unusedDependencies": Array [],
+}
+`;
+
+exports[`Node API should work with simple demo 2`] = `
+Object {
+  "brace-expansion": Array [
+    Object {
+      "filePath": "src/index.js",
+      "lineNumber": 2,
+    },
+  ],
+  "glob": Array [
+    Object {
+      "filePath": "src/index.js",
+      "lineNumber": 3,
+    },
+  ],
+  "minimatch": Array [
+    Object {
+      "filePath": "src/index.js",
+      "lineNumber": 1,
+    },
+  ],
 }
 `;
